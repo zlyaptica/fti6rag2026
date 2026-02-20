@@ -21,6 +21,11 @@ SYSTEM_PROMPT = (
     "Учитывай как содержание источников, так и формулировку запроса."
 )
 
+## MAIN
+res = ask_llm("Привет! Как дела?")
+print(res)
+##
+
 def ask_llm(user_text: str) -> str:
     messages = [
         {
