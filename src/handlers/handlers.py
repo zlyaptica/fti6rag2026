@@ -28,3 +28,7 @@ async def handle_help_button_callback(callback: CallbackQuery):
 @router.message(Command("help"))
 async def handle_help_button(message: Message):
     await send_help_info(message)
+
+@router.message(F.text)
+async def handle_question(message: Message):
+    await message.answer(message.text)
