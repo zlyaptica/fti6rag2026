@@ -1,0 +1,6 @@
+services:
+  tg_bot:
+    build: .
+    container_name: tg_bot
+    env_file:
+      - ./.env.local
