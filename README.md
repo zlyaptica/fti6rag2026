@@ -3,6 +3,7 @@
 * в каждой папке должно быть 2 файла:
    * run.py
    * README.md
+   * requirements.txt
 
 # Ход проекта
 
