@@ -21,11 +21,6 @@ SYSTEM_PROMPT = (
     "Учитывай как содержание источников, так и формулировку запроса."
 )
 
-## MAIN
-res = ask_llm("Привет! Как дела?")
-print(res)
-##
-
 def ask_llm(user_text: str) -> str:
     messages = [
         {
@@ -56,3 +51,7 @@ def ask_llm(user_text: str) -> str:
     content = tokenizer.decode(output_ids[0:], skip_special_tokens=True).strip("\n")
 
     return content
+
+# Тестирование функции "вопрос-ответ"
+test = ask_llm("Как починить мою машину марки Lada?")
+print(test)
