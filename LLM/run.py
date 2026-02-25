@@ -2,6 +2,12 @@ import torch
 from transformers import AutoTokenizer, AutoModelForCausalLM
 
 MODEL_PATH = "./Qwen3-0.6B"
+#++Bykov
+#import sys
+#import os
+#sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+#from DB.func_find import search
+#--Bykov
 device = "cuda" if torch.cuda.is_available() else "cpu"
 
 tokenizer = AutoTokenizer.from_pretrained(
@@ -21,12 +27,15 @@ SYSTEM_PROMPT = (
     "Учитывай как содержание источников, так и формулировку запроса."
 )
 
-## MAIN
-res = ask_llm("Привет! Как дела?")
-print(res)
-##
-
-def ask_llm(user_text: str) -> str:
+def ask_llm(user_text: str, top_k: int = 5) -> str:
+    #++Bykov
+    #retrieved = search(user_text, top_k=top_k)
+    #if retrieved:
+    #    context = "\n\n".join([doc[0] for doc in retrieved])
+    #else:
+    #    context = "Контекст отсутствует."
+    #user_text = f"Контекст:\n{context}\n\nВопрос: {user_text}"
+    #--Bykov
     messages = [
         {
             "role": "system",
@@ -56,3 +65,9 @@ def ask_llm(user_text: str) -> str:
     content = tokenizer.decode(output_ids[0:], skip_special_tokens=True).strip("\n")
 
     return content
+
+if __name__ == "__main__":
+    
+    # Тестирование функции "вопрос-ответ"
+    test = ask_llm("Как починить мою машину марки Lada?")
+    print(test)
