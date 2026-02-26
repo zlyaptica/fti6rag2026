@@ -1,4 +1,5 @@
 import chromadb
+import uuid
 
 client = None
 collection = None
@@ -24,9 +25,14 @@ def select_query(text: str) -> str:
     #Поиск в БД
     print("Ищу")
 
-def insert_query(text: str):
-    #Вставить в бд
-    print("Вставляю")
+def insert_query(text: str, metadata: dict = None):
+        doc_id = str(uuid.uuid4())
+        collection.add(
+            documents=[text],
+            metadatas=[metadata or {}],
+            ids=[doc_id]
+        )
+        print(f"Документ добавлен с ID: {doc_id}")
 
 def delete_query(text: str):
     #Удалить из бд
