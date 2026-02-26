@@ -1,9 +1,16 @@
 # DB
-'''
+## Общие сведенья
+файл config.py содержит реализацию развертывания векторной базы данных chromedb. Для ее установки используется код, приведенный ниже:
+```
 py -3 -m venv .venv
 .venv\Scripts\activate
 pip install -r requirements.txt
-'''
+```
+файл run.py запускает тестирование функционала для работы с базой данных
+
+## Основные функции
+### init
+Функция init создает клиента и формирует коллекцию. По умолчанию создание происходит в директории "./chroma_db". Коллекция по умолчанию называется "my_collection"
 
 https://github.com/FSerg/mcp-1c-v1?ysclid=mm2gat7hhi942297636
 https://infostart.ru/1c/tools/2407674/?ysclid=mm2gddwt7v971145245
