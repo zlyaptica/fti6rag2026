@@ -22,8 +22,14 @@ def init(dir: str = "./chroma_db", collection_name:str = "my_collection"):
         print("init fail")
 
 def select_query(text: str) -> str:
-    #Поиск в БД
     print("Ищу")
+    results = collection.query(query_texts=[text])
+    if not results['documents'][0]:
+        print("Не нашёл.")
+        return ""
+    context = "\n\n".join(results['documents'][0])
+    print("Что-то нашёл! Смотри: " + context)
+    return context
 
 def insert_query(text: str, metadata: dict = None):
         doc_id = str(uuid.uuid4())
