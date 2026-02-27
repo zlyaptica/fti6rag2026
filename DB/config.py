@@ -34,6 +34,15 @@ def insert_query(text: str, metadata: dict = None):
         )
         print(f"Документ добавлен с ID: {doc_id}")
 
-def delete_query(text: str):
-    #Удалить из бд
-    print("Удаляю")
+def delete_query(text: str = None, doc_id: str = None):
+        if doc_id:
+            collection.delete(ids=[doc_id])
+            print(f"Документ {doc_id} удален")
+        elif text:           
+            results = select_query(text, n_results=10)
+            ids_to_delete = [r['id'] for r in results]
+            if ids_to_delete:
+                collection.delete(ids=ids_to_delete)
+                print(f"Удалено {len(ids_to_delete)} документов")
+            else:
+                print("Документы не найдены")  
