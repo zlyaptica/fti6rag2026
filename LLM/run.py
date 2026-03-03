@@ -24,11 +24,10 @@ class QwenLLM:
             local_files_only=True
         )
         
-        dtype = torch.bfloat16 if torch.cuda.is_available() else torch.float32
         self.model = AutoModelForCausalLM.from_pretrained(
             self.model_path,  
             device_map="auto",
-            torch_dtype=dtype,
+            dtype=torch.bfloat16,
             local_files_only=True
         )
         print("Модель успешно загружена!")
@@ -48,7 +47,8 @@ class QwenLLM:
         text = self.tokenizer.apply_chat_template(
             messages,
             tokenize=False,
-            add_generation_prompt=True
+            add_generation_prompt=True,
+            enable_thinking=False
         )
 
         model_inputs = self.tokenizer([text], return_tensors="pt").to(self.model.device)
@@ -62,20 +62,11 @@ class QwenLLM:
         )
 
         output_ids = generated_ids[0][len(model_inputs.input_ids[0]):].tolist()
-        content = self.tokenizer.decode(output_ids, skip_special_tokens=True).strip()
+        content = self.tokenizer.decode(output_ids[0:], skip_special_tokens=True).strip("\n")
 
         return content
 
 def ask_llm(user_text: str, top_k: int = 5) -> str:
-    #++Bykov
-    #retrieved = search(user_text, top_k=top_k)
-    #if retrieved:
-    #    context = "\n\n".join([doc[0] for doc in retrieved])
-    #else:
-    #    context = "Контекст отсутствует."
-    #user_text = f"Контекст:\n{context}\n\nВопрос: {user_text}"
-    #--Bykov
-    
     llm = QwenLLM() 
     return llm.ask(user_text)
 _global_llm_instance = None
