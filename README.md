@@ -1,44 +1,30 @@
 # ПЕТРГУ ФТИ 6 КУРС | РАЗРАБОТКА RAG
 
-* в каждой папке должно быть 2 файла:
-   * run.py
-   * README.md
-   * requirements.txt
+## Запуск
 
-# Ход проекта
-
-## LLM
-### Участники
-* Денис Пушко
-* Гиорги Данелиа
-* Сорокин Никита
-
-### Описание
-
-### Векторная БД
-### Участники
-* Арикайнен Иван
-* Быков Влад
-* Борисов Кирилл
-* Дьяконов Семён
-
-### Телеграм бот
-### Участники
-* Максим Красавцев
-* Ефремов Лев
-* Дима
-* Киселев Данила
-
-### Описание
-
-* для запуска бота необходимо выполнить команды
+### Подготовка переменных окружения
+На основе .env создайте файл .env.local и поместите заполните его по примеру.
+Для регистрации URL вебхука в Телеграмме необходимо выполнить GET запрос:
 ```
+https://api.telegram.org/bot<TOKEN>/setWebhook?url=path
+
+# Пример запроса на данных из .env:
+https://api.telegram.org/bottoken/setWebhook?url=https://example.com/telegram
+```
+
+### Команда запуска
+Windows
+``` bash
 py -3 -m venv .venv
 .venv\Scripts\activate
 pip install -r requirements.txt
 py run.py
 ```
-* после запуска выполнить ....
 
-### MAX бот
-### Участники
+Linux
+``` bash
+python3 -m venv .venv
+source .venv/bin/activate
+pip install -r requirements.txt
+python run.py
+```
