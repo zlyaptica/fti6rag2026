@@ -1,0 +1,52 @@
+# run.py
+
+import queue
+import threading
+import time
+
+
+llm_queue = queue.Queue()
+
+
+def llm_ask(prompt: str) -> str:
+    time.sleep(2)
+    return f"Ответ на: {prompt[:100]}"
+
+# заглушка для ТГ
+def send_to_telegram(chat_id: int, text: str):
+    print(f"[LLM] Отправляем ответ в Telegram, chat_id={chat_id}: {text}")
+
+
+# Обработка очереди к LLM
+def llm_worker():
+    while True:
+        job = llm_queue.get()
+        try:
+            answer = llm_ask(job["prompt"])
+            send_to_telegram(job["chat_id"], answer)
+        except Exception as e:
+            print(f"[LLM] Ошибка: {e}")
+        finally:
+            llm_queue.task_done()
+
+
+threading.Thread(target=llm_worker, daemon=True).start()
+
+# заглушка БД
+def db_select(question: str) -> str:
+    return f"Найден контекст по вопросу: '{question}'"
+
+
+# Обработчик POST(пример)
+def handle_telegram_webhook(request_json: dict):
+    message = request_json.get("message", {})
+    user_text = message.get("text", "")
+    chat_id = message.get("chat", {}).get("id")
+    search_result = db_select(user_text)
+    prompt = f"Вопрос: {user_text}\n\nКонтекст: {search_result}"
+    llm_queue.put({
+        "prompt": prompt,
+        "chat_id": chat_id,
+    })
+
+    return {"status": "ok"}
