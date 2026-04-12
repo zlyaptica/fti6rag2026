@@ -1,34 +1,39 @@
 import chromadb
+from chromadb.utils import embedding_functions
 import uuid
 
-client = None
-collection = None
-
-def init(dir: str = "./chroma_db", collection_name:str = "my_collection"):
-    global client, collection
-    try:
-        client = chromadb.PersistentClient(path=dir)
-
+class ChromaDB:
+    def __init__(self, dir: str = "./chroma_db", collection_name:str = "my_collection"):
         try:
-            collection = client.get_collection(collection_name)
-        except:
-            collection = client.create_collection(collection_name)
+            client = chromadb.PersistentClient(path=dir)
 
-        print("init successfully")
-    except:
-        print("init fail")
+            self._collection = client.get_or_create_collection(
+                name=collection_name,
+            )
+            print("init successfully")
+        except Exception as e:
+            print("init fail", e)
 
-def select_query(text: str) -> str:
-    results = collection.query(query_texts=[text])
-    if not results['documents'][0]:
-        return ""
-    context = "\n\n".join(results['documents'][0])
-    return context
+    def select_query(self, text: str) -> str:
+        results = self._collection.query(query_texts=[text], n_results=1)
+        if not results['documents'] or not results['documents'][0]:
+            return ""
 
-def insert_query(text: str, metadata: dict = None):
+        return results['documents'][0][0]
+
+    def insert_query(self, text: str, metadata: dict = None) -> None:
         doc_id = str(uuid.uuid4())
-        collection.add(
+        self._collection.add(
             documents=[text],
-            metadatas=[metadata or {}],
             ids=[doc_id]
         )
+
+    def get_facts(self) -> str:
+        facts = self._collection.get()
+        if not facts['documents']:
+            return ""
+        
+        return "\n".join(facts['documents'])
+    
+
+chromadb_client = ChromaDB()
